@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:harav_assignment/screen.dart/homepage.dart';
+import 'package:harav_assignment/screen.dart/userAccount.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -20,7 +21,7 @@ class _BottomBarState extends State<BottomBar> {
       style: TextStyle(color: Colors.black, fontSize: 25),
     ),
     Text("I am 👜 Shoping store"),
-    Text("I am 👦 Profile page ")
+    UserAccount(),
   ];
   void onTap(int index) {
     setState(() {

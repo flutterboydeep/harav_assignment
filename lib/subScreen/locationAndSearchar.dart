@@ -17,14 +17,31 @@ class LocationAndSearchBar extends StatefulWidget {
 }
 
 class _LocationAndSearchBarState extends State<LocationAndSearchBar> {
-  User? user;
-  String location = " ";
+  User? user = FirebaseAuth.instance.currentUser;
+  String location = "";
+
   bool isSign = false;
   var latitude = 0.0;
   var longitude = 0.0;
   var locationAddress = "";
   @override
+  void initState() {
+    super.initState();
+    // sharedInitialized();
+    // checkIfSignedIn();
+  }
+
+  // giveValue() async {
+  //   final SharedPreferences sp = await SharedPreferences.getInstance();
+  //   isSign=sp.get
+  // }
+
+  @override
   Widget build(BuildContext context) {
+    log(" i am re run and the value of location is $location");
+    sharedInitialized();
+    log(" i am re run after and the value of location is $location");
+
     return Container(
       padding: EdgeInsets.only(top: 40),
       decoration: BoxDecoration(
@@ -47,7 +64,7 @@ class _LocationAndSearchBarState extends State<LocationAndSearchBar> {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             subtitle: Text(
-              location,
+              location.toString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             trailing: Padding(
@@ -57,16 +74,18 @@ class _LocationAndSearchBarState extends State<LocationAndSearchBar> {
                     right: Radius.circular(15), left: Radius.circular(15)),
                 // borderRadius: BorderRadius.circular(17),
                 child: InkWell(
-                  onTap: () {
-                    checkIfSignedIn();
+                  onTap: () async {
+                    await checkIfSignedIn();
                   },
-                  child: isSign != true
+                  child: isSign == true
                       ? Image(
+                          image: NetworkImage(user?.photoURL ??
+                              "lib/assets/coffeeImages/coffeeSplach.jpeg"))
+                      : Image(
                           image:
                               // ? AssetImage("lib/assets/coffeeImages/NoPerson.jpgg")
                               AssetImage(
-                                  "lib/assets/coffeeImages/coffeeSplach.jpeg"))
-                      : Image(image: NetworkImage(user!.photoURL ?? " ")),
+                                  "lib/assets/coffeeImages/coffeeSplach.jpeg")),
                 ),
               ),
             ),
@@ -133,20 +152,35 @@ class _LocationAndSearchBarState extends State<LocationAndSearchBar> {
     );
   }
 
-  checkIfSignedIn() async {
-    user = FirebaseAuth.instance.currentUser;
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      isSign = pref.getBool('authGoogle')!;
-      location = pref.getString('address')!;
-    });
-
-    if (isSign == null) {
+  checkIfSignedIn<bool>() async {
+    if (isSign == false) {
+      user = FirebaseAuth.instance.currentUser;
       await getLocationData();
       await googleSignin();
-      setState(() {});
+      return true;
+      // await sharedInitialized();
+
       // user = FirebaseAuth.instance.currentUser;
+    } else {
+      log("issign in allready true in checkifSignedIn fun");
+      return isSign;
     }
+  }
+
+  sharedInitialized() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    if (isSign == false) {
+      setState(() {
+        isSign = pref.getBool('authGoogle') ?? false;
+        location = pref.getString('address') ?? "";
+      });
+    }
+  }
+
+  firstValueCheck() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    isSign = pref.getBool('authGoogle') ?? false;
+    // if()
   }
 
   getLocationData() async {
@@ -175,7 +209,7 @@ class _LocationAndSearchBarState extends State<LocationAndSearchBar> {
         await placemarkFromCoordinates(latitude, longitude);
     setState(() {
       locationAddress = placemark[0].locality.toString();
-      prefs.setString("address", locationAddress);
+      prefs.setString('address', locationAddress);
       log("This is Location according address $placemark");
     });
   }
@@ -194,7 +228,7 @@ class _LocationAndSearchBarState extends State<LocationAndSearchBar> {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool("authGoogle", true);
+      prefs.setBool('authGoogle', true);
       return userCreated;
     } catch (e) {
       throw e.toString();
