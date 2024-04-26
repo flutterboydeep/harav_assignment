@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "718350674527",
+    "project_id": "authtest-ce667",
+    "storage_bucket": "authtest-ce667.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718350674527:android:31c401cea70171742989ea",
+        "android_client_info": {
+          "package_name": "com.example.harav_assignment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718350674527-sehf9scvu9dch3gldckdpm9cl6mt9c6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUMXuFId0NkgsbYpHcVvD-J6KwcO-pxDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718350674527-sehf9scvu9dch3gldckdpm9cl6mt9c6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
